@@ -155,35 +155,33 @@ public class QuizActivity extends AppCompatActivity {
 
     // check if Answer is  correct
     private Boolean checkAnswer(Question thisQ){
-        String[] answers = thisQ.getAnswerArray();
-        int correctIndex = thisQ.getCorrectAnswrIndex();
-        String correctAnswer = answers[correctIndex];
+        String correctAnswer = thisQ.getCorrectAnswer();
 
         return clickedBtn.getText().toString().equals(correctAnswer);
     }// end checkAnswer
 
     // Build an array of questions
     private void buildQuestionArray(){
-        questions[0] = new Question("What is the capital of Australia?", new String[]{"Melbourne", "Sydney", "Canberra", "Hobart"}, 2);
-        questions[1] = new Question("What is the capital of Victoria?", new String[]{"Melbourne", "Sydney", "Brisbane", "Hobart"}, 0);
-        questions[2] = new Question("What is the capital of New South Wales?", new String[]{"Melbourne", "Sydney", "Perth", "Darwin"}, 1);
-        questions[3] = new Question("What number equal 1 dozen?", new String[]{"8", "10", "12", "14"}, 2);
-        questions[4] = new Question("How many days are in 1 year?", new String[]{"635", "365", "356", "536"}, 1);
-        questions[5] = new Question("What is the 10th month of the year?", new String[]{"September", "August", "November", "October"}, 3);
-        questions[6] = new Question("What is not a native Australian animal?", new String[]{"Koala", "Rabbit", "Kangaroo", "Platypus"}, 1);
-        questions[7] = new Question("Which AFL club is the greatest (There is only one!)?", new String[]{"Demons", "Lions", "Tigers", "Cats"}, 3);
-        questions[8] = new Question("Who won the 2022 AFL Grand Final?", new String[]{"Melbourne", "Sydney", "Geelong", "Adelaide"}, 2);
-        questions[9] = new Question("How many balls are bowled in an over of cricket", new String[]{"4", "6", "8", "10"}, 1);
-        questions[10] = new Question("What is the higher mountain in the world?", new String[]{"Matterhorn", "Fuji", "Kilimanjaro", "Everest"}, 3);
-        questions[11] = new Question("What is the worlds largest Ocean?", new String[]{"Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean"}, 0);
-        questions[12] = new Question("What is not a primary colour?", new String[]{"Red", "Green", "Yellow", "Blue"}, 1);
-        questions[13] = new Question("What is the worlds largest desert?", new String[]{"Sahara", "Antarctic", "Simpson", "Kalahari"}, 1);
-        questions[14] = new Question("How many holes in a round of golf?", new String[]{"17", "18", "19", "20"}, 1);
-        questions[15] = new Question("Which river runs through Melbourne?", new String[]{"Melbourne River", "The Nile", "Barwon River", "Yara"}, 2);
-        questions[16] = new Question("What is the clowns name on 'The Simpson's'?", new String[]{"Kristy", "Krusty", "Kirsty", "Klusty"}, 1);
-        questions[17] = new Question("What is the dogs name on 'Family Guy'?", new String[]{"Spot", "Jack", "Wolfy", "Brian"}, 3);
-        questions[18] = new Question("What is the pigs name in story mode minecraft? ", new String[]{"Reuben", "Pepper", "Petra", "Lukas"}, 0);
-        questions[19] = new Question("Who is not a character in the 'Call of Duty' franchise?", new String[]{"Captain 'Soap'", "Gaz", "Ghost", "Rambo"}, 3);
+        questions[0] = new Question("What is the capital of Australia?", new String[]{"Melbourne", "Sydney", "Canberra", "Hobart"}, "Canberra");
+        questions[1] = new Question("What is the capital of Victoria?", new String[]{"Melbourne", "Sydney", "Brisbane", "Hobart"}, "Melbourne");
+        questions[2] = new Question("What is the capital of New South Wales?", new String[]{"Melbourne", "Sydney", "Perth", "Darwin"}, "Sydney");
+        questions[3] = new Question("What number equal 1 dozen?", new String[]{"8", "10", "12", "14"}, "12");
+        questions[4] = new Question("How many days are in 1 year?", new String[]{"635", "365", "356", "536"}, "365");
+        questions[5] = new Question("What is the 10th month of the year?", new String[]{"September", "August", "November", "October"}, "October");
+        questions[6] = new Question("What is not a native Australian animal?", new String[]{"Koala", "Rabbit", "Kangaroo", "Platypus"}, "Rabbit");
+        questions[7] = new Question("Which AFL club is the greatest (There is only one!)?", new String[]{"Demons", "Lions", "Tigers", "Cats"}, "Cats");
+        questions[8] = new Question("Who won the 2022 AFL Grand Final?", new String[]{"Melbourne", "Sydney", "Geelong", "Adelaide"}, "Geelong");
+        questions[9] = new Question("How many balls are bowled in an over of cricket", new String[]{"4", "6", "8", "10"}, "6");
+        questions[10] = new Question("What is the highest mountain in the world?", new String[]{"Matterhorn", "Fuji", "Kilimanjaro", "Everest"}, "Everest");
+        questions[11] = new Question("What is the worlds largest Ocean?", new String[]{"Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean"}, "Pacific Ocean");
+        questions[12] = new Question("What is not a primary colour?", new String[]{"Red", "Green", "Yellow", "Blue"}, "Green");
+        questions[13] = new Question("What is the worlds largest desert?", new String[]{"Sahara", "Antarctic", "Simpson", "Kalahari"}, "Antarctic");
+        questions[14] = new Question("How many holes in a round of golf?", new String[]{"17", "18", "19", "20"}, "18");
+        questions[15] = new Question("Which river runs through Melbourne?", new String[]{"Melbourne River", "The Nile", "Barwon River", "Yara"}, "Yara");
+        questions[16] = new Question("What is the clowns name on 'The Simpson's'?", new String[]{"Kristy", "Krusty", "Kirsty", "Klusty"}, "Krusty");
+        questions[17] = new Question("What is the dogs name on 'Family Guy'?", new String[]{"Spot", "Jack", "Wolfy", "Brian"}, "Brian");
+        questions[18] = new Question("What is the pigs name in story mode minecraft? ", new String[]{"Reuben", "Pepper", "Petra", "Lukas"}, "Reuben");
+        questions[19] = new Question("Who is not a character in the 'Call of Duty' franchise?", new String[]{"Captain 'Soap'", "Gaz", "Ghost", "Rambo"}, "Rambo");
 
     } //end BuildQuestionArray
 

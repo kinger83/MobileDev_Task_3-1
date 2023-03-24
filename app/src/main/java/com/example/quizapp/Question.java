@@ -4,12 +4,12 @@ package com.example.quizapp;
 public class Question {
     private String questionTxt;
     private String[] answerArray;
-    private int correctAnswerIndex;
+    private String correctAnswer;
 
-    public Question(String questionTxt, String[] answerArray, int correctAnswerIndex){
+    public Question(String questionTxt, String[] answerArray, String correctAnswer){
         this.questionTxt = questionTxt;
         this.answerArray = answerArray;
-        this.correctAnswerIndex = correctAnswerIndex;
+        this.correctAnswer = correctAnswer;
     }
 
     public String getQuestion(){
@@ -20,7 +20,7 @@ public class Question {
         return answerArray;
     }
 
-    public int getCorrectAnswrIndex(){
-        return correctAnswerIndex;
+    public String getCorrectAnswer(){
+        return correctAnswer;
     }
 }
