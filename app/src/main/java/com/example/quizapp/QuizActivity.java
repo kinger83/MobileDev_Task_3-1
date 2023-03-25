@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +46,7 @@ public class QuizActivity extends AppCompatActivity {
     int btnColor;
     Boolean answerSubmitted = false;
     Question thisQuestion;
+    Question[] quizQuestions = new Question[maxquestions];
 
     // receive intent data, build array of questions
     @Override
@@ -93,7 +95,7 @@ public class QuizActivity extends AppCompatActivity {
                     Toast.makeText(QuizActivity.this, "Please select an answer before submitting.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                processUserInput();
+                processUserInput(thisQuestion);
 
 
 
@@ -116,7 +118,6 @@ public class QuizActivity extends AppCompatActivity {
         correctAnswers = 0;
         // Build array of questions for current quiz, checking question does not already exist
         int[] assignedIndexes = new int[]{-1, -1, -1, -1, -1};
-        Question[] quizQuestions = new Question[maxquestions];
         int potentialNewQuestion = -1;
 
         // loop for adding (maxQuestions) questions to quizQuestions array
@@ -151,13 +152,14 @@ public class QuizActivity extends AppCompatActivity {
         answerBtn3.setBackgroundColor(btnColor);
         answerBtn4.setBackgroundColor(btnColor);
         userCurrentAnswer = "";
+        currAnswerTxt.setText("");
 
         // set thisQuestion
         thisQuestion = quizQuestions[curQuestion -1];
         // Display question
         questionNumTxt.setText((String.valueOf(curQuestion) + "/5"));
         progressBar.setMax(5);
-        progressBar.setProgress(1);
+        progressBar.setProgress(curQuestion);
         subNextBtn.setText("SUBMIT");
         questionNumTitleTxt.setText("Question " + String.valueOf(curQuestion));
         questionTxt.setText(thisQuestion.getQuestion());
@@ -172,12 +174,57 @@ public class QuizActivity extends AppCompatActivity {
         answerBtn3.setText(answerDisplayOrder[2]);
         answerBtn4.setText(answerDisplayOrder[3]);
 
-        processUserInput(thisQuestion);
     }
 
     private void processUserInput(Question thisQuestion){
+        // check if user has correct answer
         userHasCorrectAnswer = checkAnswer(thisQuestion);
-        // set color of button here
+        // iff correct, add 1 to user score
+        if(userHasCorrectAnswer) {
+            correctAnswers++;
+        }
+        // set color of button displaying results
+        clickedBtn.setBackgroundColor(Color.RED);
+        if(answerBtn1.getText().toString().equals(thisQuestion.getCorrectAnswer())){
+            answerBtn1.setBackgroundColor(Color.GREEN);
+        }
+        if(answerBtn2.getText().toString().equals(thisQuestion.getCorrectAnswer())){
+            answerBtn2.setBackgroundColor(Color.GREEN);
+        }
+        if(answerBtn3.getText().toString().equals(thisQuestion.getCorrectAnswer())){
+            answerBtn3.setBackgroundColor(Color.GREEN);
+        }
+        if(answerBtn4.getText().toString().equals(thisQuestion.getCorrectAnswer())){
+            answerBtn4.setBackgroundColor(Color.GREEN);
+        }
+
+        // start short timer for display to stay active then refresh with next question
+
+        CountDownTimer timer = new CountDownTimer(2000, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                // update current question
+                curQuestion++;
+
+                //if current question is now greater than 5, open end quiz activity
+                if (curQuestion > maxquestions){
+                    // end quiz code here....
+                    // for testing
+                    playQuiz();
+                }
+                else{
+                    displayNextQuestion(quizQuestions);
+                }
+
+
+
+            }
+        }.start();
 
     }
 
@@ -201,7 +248,7 @@ public class QuizActivity extends AppCompatActivity {
         questions[0] = new Question("What is the capital of Australia?", new String[]{"Melbourne", "Sydney", "Canberra", "Hobart"}, "Canberra");
         questions[1] = new Question("What is the capital of Victoria?", new String[]{"Melbourne", "Sydney", "Brisbane", "Hobart"}, "Melbourne");
         questions[2] = new Question("What is the capital of New South Wales?", new String[]{"Melbourne", "Sydney", "Perth", "Darwin"}, "Sydney");
-        questions[3] = new Question("What number equal 1 dozen?", new String[]{"8", "10", "12", "14"}, "12");
+        questions[3] = new Question("What number is equal to 1 dozen?", new String[]{"8", "10", "12", "14"}, "12");
         questions[4] = new Question("How many days are in 1 year?", new String[]{"635", "365", "356", "536"}, "365");
         questions[5] = new Question("What is the 10th month of the year?", new String[]{"September", "August", "November", "October"}, "October");
         questions[6] = new Question("What is not a native Australian animal?", new String[]{"Koala", "Rabbit", "Kangaroo", "Platypus"}, "Rabbit");
