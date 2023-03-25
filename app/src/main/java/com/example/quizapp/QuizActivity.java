@@ -3,6 +3,7 @@ package com.example.quizapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +42,9 @@ public class QuizActivity extends AppCompatActivity {
     public Random random;
     public Button clickedBtn;
     public Boolean userHasCorrectAnswer;
+    int btnColor;
+    Boolean answerSubmitted = false;
+    Question thisQuestion;
 
     // receive intent data, build array of questions
     @Override
@@ -69,89 +73,121 @@ public class QuizActivity extends AppCompatActivity {
         answerBtn4 = findViewById(R.id.answerBtn4);
         subNextBtn = findViewById(R.id.subNextBtn);
         currAnswerTxt = findViewById(R.id.currAnswerTxt);
+        btnColor = answerBtn1.getSolidColor();
+
+        random = new Random();
+
+        // setup onClickListeners
+        View.OnClickListener answerListener = v -> {
+            clickedBtn = (Button) v;
+            userCurrentAnswer = clickedBtn.getText().toString();
+            currAnswerTxt.setText("You have currently selected:\n" + userCurrentAnswer);
+        };
+
+        // setup submit onclick listener
+        View.OnClickListener submitListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("Button pressed", "Sub button pressed");
+                if(userCurrentAnswer.equals("")){
+                    Toast.makeText(QuizActivity.this, "Please select an answer before submitting.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                processUserInput();
+
+
+
+            }
+        };
+
+        // Wait for a onclick message from a button
+        answerBtn1.setOnClickListener(answerListener);
+        answerBtn2.setOnClickListener(answerListener);
+        answerBtn3.setOnClickListener(answerListener);
+        answerBtn4.setOnClickListener(answerListener);
+        subNextBtn.setOnClickListener(submitListener);
 
         playQuiz();
     }
 
     public void playQuiz(){
-        // initialize for question 1
+        // initialize new quiz
         curQuestion = 1;
-        random = new Random();
         correctAnswers = 0;
-        Boolean hasSelectedCorrectAnswer;
+        // Build array of questions for current quiz, checking question does not already exist
+        int[] assignedIndexes = new int[]{-1, -1, -1, -1, -1};
+        Question[] quizQuestions = new Question[maxquestions];
+        int potentialNewQuestion = -1;
 
-
-        // loop from question 1 to 5
-        for (int i = 1; i < 6 ; i++) {
-            // get a question from question array
-            int qIndex = random.nextInt(questions.length);
-            Question thisQuestion = questions[qIndex];
-            userHasAnswered = false;
-
-            // display all info into view
-            questionNumTxt.setText((String.valueOf(curQuestion) + "/5"));
-            progressBar.setMax(5);
-            progressBar.setProgress(1);
-            subNextBtn.setText("SUBMIT");
-            questionNumTitleTxt.setText("Question " + String.valueOf(curQuestion));
-            questionTxt.setText(thisQuestion.getQuestion());
-
-            // shuffle answer order.
-            String[] answerDisplayOrder = thisQuestion.getAnswerArray();
-            Collections.shuffle(Arrays.asList(answerDisplayOrder));
-
-            // Display answer options
-            answerBtn1.setText(answerDisplayOrder[0]);
-            answerBtn2.setText(answerDisplayOrder[1]);
-            answerBtn3.setText(answerDisplayOrder[2]);
-            answerBtn4.setText(answerDisplayOrder[3]);
-
-            // set up answer button onClick listener
-            View.OnClickListener answerListener = v -> {
-                clickedBtn = (Button) v;
-                Log.v("Button pressed", clickedBtn.getText().toString());
-                Log.v("button is:", String.valueOf(clickedBtn.getId()));
-                userCurrentAnswer = clickedBtn.getText().toString();
-                currAnswerTxt.setText("You have currently selected:\n" + userCurrentAnswer);
-            };
-
-            // setup submit onclick listener
-            View.OnClickListener submitListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.v("Button pressed", "Sub button pressed");
-                    if(userCurrentAnswer.equals("")){
-                        Toast.makeText(QuizActivity.this, "Please select an answer before submitting.", Toast.LENGTH_SHORT).show();
-                        return;
+        // loop for adding (maxQuestions) questions to quizQuestions array
+        for (int i = 0; i < quizQuestions.length ; i++) {
+            Boolean inUse = true;
+            // loop to see if question is already in use
+            while (inUse == true){
+                potentialNewQuestion = random.nextInt(questions.length);
+                inUse = false;
+                for (int j = 0; j < assignedIndexes.length; j++) {
+                    if(assignedIndexes[j] == potentialNewQuestion){
+                        inUse = true;
                     }
-                    userHasCorrectAnswer = checkAnswer(thisQuestion);
-                    if(userHasCorrectAnswer) Log.v("user:", "Correct answer");
-                    else Log.v("user:", "WRONG answer");
-                    processQuestionResults(clickedBtn, thisQuestion);
                 }
-            };
+            } // end while loop
 
-                // Wait for a onclick message from a button
-                answerBtn1.setOnClickListener(answerListener);
-                answerBtn2.setOnClickListener(answerListener);
-                answerBtn3.setOnClickListener(answerListener);
-                answerBtn4.setOnClickListener(answerListener);
-                subNextBtn.setOnClickListener(submitListener);
-            }
+            // out of loop means new index to add is unique in th quizQuestions array and int to used indexes
+            assignedIndexes[i] = potentialNewQuestion;
+            quizQuestions[i] = questions[potentialNewQuestion];
+        } // end adding questions loop
+
+        displayNextQuestion(quizQuestions);
+
     } // end playQuiz
 
     // private functions
 
-    private void processQuestionResults(Button clickedBtn, Question thisQuestion) {
-            if (userHasCorrectAnswer == false) {
-                clickedBtn.setBackgroundColor(Color.RED);
-                // TODO make correct answer green.
-                return;
-            } else {
-                correctAnswers++;
-                clickedBtn.setBackgroundColor(Color.GREEN);
-            }
+    private void displayNextQuestion(Question[] quizQuestions){
+        // Reset all buttons to original state
+        answerBtn1.setBackgroundColor(btnColor);
+        answerBtn2.setBackgroundColor(btnColor);
+        answerBtn3.setBackgroundColor(btnColor);
+        answerBtn4.setBackgroundColor(btnColor);
+        userCurrentAnswer = "";
+
+        // set thisQuestion
+        thisQuestion = quizQuestions[curQuestion -1];
+        // Display question
+        questionNumTxt.setText((String.valueOf(curQuestion) + "/5"));
+        progressBar.setMax(5);
+        progressBar.setProgress(1);
+        subNextBtn.setText("SUBMIT");
+        questionNumTitleTxt.setText("Question " + String.valueOf(curQuestion));
+        questionTxt.setText(thisQuestion.getQuestion());
+
+        // shuffle answer order.
+        String[] answerDisplayOrder = thisQuestion.getAnswerArray();
+        Collections.shuffle(Arrays.asList(answerDisplayOrder));
+
+        // Display answer options
+        answerBtn1.setText(answerDisplayOrder[0]);
+        answerBtn2.setText(answerDisplayOrder[1]);
+        answerBtn3.setText(answerDisplayOrder[2]);
+        answerBtn4.setText(answerDisplayOrder[3]);
+
+        processUserInput(thisQuestion);
     }
+
+    private void processUserInput(Question thisQuestion){
+        userHasCorrectAnswer = checkAnswer(thisQuestion);
+        // set color of button here
+
+    }
+
+
+    // reset buttons after a timer, set userAnswered to true..all in finish
+    private void resetConditions(){
+        userHasAnswered = true;
+    }
+    // Process result and display colored buttons, add 1 if needed to correct int
+
 
     // check if Answer is  correct
     private Boolean checkAnswer(Question thisQ){
