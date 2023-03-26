@@ -3,6 +3,7 @@ package com.example.quizapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -30,7 +31,6 @@ public class ResultsPage extends AppCompatActivity {
         TextView score = findViewById(R.id.scoreTxt);
         name.setText("Congratulations " + userName +"!");
         score.setText(String.valueOf(userScore) + "/" + String.valueOf(maxScore));
-
     }
 
     public void quit(View view){

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -44,6 +45,7 @@ public class QuizActivity extends AppCompatActivity {
     Boolean answerSubmitted = false;
     Question thisQuestion;
     Question[] quizQuestions = new Question[maxquestions];
+    MediaPlayer mediaPlayer;
 
     // receive intent data, build array of questions
     @Override
@@ -179,6 +181,12 @@ public class QuizActivity extends AppCompatActivity {
         // iff correct, add 1 to user score
         if(userHasCorrectAnswer) {
             correctAnswers++;
+            mediaPlayer = MediaPlayer.create(this,R.raw.correct);
+            mediaPlayer.start();
+        }
+        else{
+            mediaPlayer = MediaPlayer.create(this, R.raw.wrong);
+            mediaPlayer.start();
         }
         // set color of button displaying results
         clickedBtn.setBackgroundColor(Color.RED);
@@ -194,6 +202,7 @@ public class QuizActivity extends AppCompatActivity {
         if(answerBtn4.getText().toString().equals(thisQuestion.getCorrectAnswer())){
             answerBtn4.setBackgroundColor(Color.GREEN);
         }
+
 
         // start short timer for display to stay active then refresh with next question
 
